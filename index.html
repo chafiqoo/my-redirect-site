@@ -1,9 +1,489 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="refresh" content="0; url='https://google.com/'">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Redirecting • Fresh Landing</title>
+  
+  <!-- 
+    LANDING PAGE – 3 second stay then redirect
+    Custom color palette:
+    - Primary: #00c300 (vibrant green)
+    - Accent / background soft: #edff9a (light lime pastel)
+    - Text & elements: white + rich green contrast
+  -->
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      /* fresh gradient using #edff9a and white, with a touch of #00c300 */
+      background: linear-gradient(135deg, #edff9a 0%, #ffffff 70%, #c8ffb0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      padding: 1.5rem;
+      margin: 0;
+      position: relative;
+    }
+
+    /* subtle nature-inspired pattern overlay (optional, clean) */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at 20% 40%, rgba(0, 195, 0, 0.03) 2%, transparent 2.5%);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    /* modern card: white background with green accents */
+    .redirect-card {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2.5rem;
+      padding: 2.8rem 2rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 100, 0, 0.35), 0 0 0 1px rgba(0, 195, 0, 0.15);
+      transition: transform 0.25s ease;
+      text-align: center;
+      border: 1px solid rgba(0, 195, 0, 0.3);
+    }
+
+    .redirect-card:hover {
+      transform: translateY(-3px);
+    }
+
+    /* icon circle using #00c300 as background */
+    .icon-wrapper {
+      background: #00c300;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 24px -8px rgba(0, 195, 0, 0.4);
+      transition: all 0.2s;
+    }
+
+    .icon-wrapper svg {
+      width: 48px;
+      height: 48px;
+      stroke: white;
+      stroke-width: 1.7;
+      fill: none;
+    }
+
+    /* heading: dark green for premium readability */
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #008d00;  /* darker version of #00c300 for contrast */
+      margin-bottom: 0.5rem;
+    }
+
+    /* destination badge: light green bg with #00c300 border */
+    .destination-badge {
+      display: inline-block;
+      background: #edff9a;
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #006b00;
+      margin-bottom: 1.6rem;
+      word-break: break-all;
+      max-width: 100%;
+      border: 1px solid #00c300;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      font-family: monospace;
+    }
+
+    .message {
+      color: #1f3b1a;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 1.8rem;
+      font-weight: 500;
+      background: #f9ffe7;
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+    }
+
+    /* countdown display with green theme */
+    .countdown-circle {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem 0 1.2rem;
+    }
+
+    .timer-number {
+      font-size: 4rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace, 'Inter';
+      background: #edff9a;
+      padding: 0.1rem 1.2rem;
+      border-radius: 70px;
+      letter-spacing: 4px;
+      color: #008d00;
+      box-shadow: inset 0 0 0 1px #00c300, 0 6px 14px rgba(0, 100, 0, 0.1);
+      line-height: 1.2;
+    }
+
+    .timer-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #008d00;
+      background: white;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      border: 1px solid #00c300;
+    }
+
+    /* progress track using #edff9a and fill #00c300 */
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      background: #edff9a;
+      border-radius: 20px;
+      margin: 0.8rem 0 1.8rem 0;
+      overflow: hidden;
+      border: 1px solid #00c300;
+    }
+
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      background: #00c300;
+      border-radius: 20px;
+      transition: width 0.08s linear;
+    }
+
+    /* manual link button: white card style with green */
+    .manual-link {
+      margin-top: 1.5rem;
+    }
+
+    .manual-link a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      color: #008d00;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.7rem 1.6rem;
+      border-radius: 50px;
+      border: 1.5px solid #00c300;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .manual-link a:hover {
+      background: #00c300;
+      color: white;
+      border-color: #008d00;
+      transform: scale(0.97);
+      box-shadow: 0 6px 14px rgba(0, 195, 0, 0.3);
+    }
+
+    .manual-link a svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .footnote {
+      font-size: 0.7rem;
+      margin-top: 2rem;
+      color: #3e6b3a;
+      background: #edff9a80;
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .redirect-card {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .timer-number {
+        font-size: 2.8rem;
+        padding: 0.1rem 0.8rem;
+      }
+      .timer-label {
+        font-size: 1rem;
+      }
+      .icon-wrapper {
+        width: 70px;
+        height: 70px;
+      }
+      .icon-wrapper svg {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    /* fade-in animation */
+    .redirect-card {
+      animation: gentleRise 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    @keyframes gentleRise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* extra micro interaction */
+    .timer-number {
+      transition: all 0.1s;
+    }
+  </style>
 </head>
 <body>
-    <p>Loading....</p>
+
+<div class="redirect-card" role="main" aria-live="polite">
+  <div class="icon-wrapper">
+    <!-- Elegant arrow / redirect icon with leaf-like vibe -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M12 5l7 7-7 7" />
+      <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5" fill="none" />
+    </svg>
+  </div>
+  
+  <h1>Almost there</h1>
+  <div class="destination-badge" id="destinationUrlDisplay">preparing link...</div>
+  
+  <p class="message">
+    ⏳ Stay on this page — redirect in progress
+  </p>
+
+  <div class="countdown-circle">
+    <span class="timer-number" id="countdownSeconds">3</span>
+    <span class="timer-label">seconds</span>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width: 100%;"></div>
+  </div>
+
+  <div class="manual-link">
+    <a href="#" id="directRedirectLink">
+      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </svg>
+      Redirect now
+    </a>
+  </div>
+  <div class="footnote">
+     Secure automatic forward • 3 second...
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ============================================================
+    // 🎯 SET YOUR DESTINATION PATH / URL HERE
+    // ------------------------------------------------------------
+    // Edit the TARGET_URL variable below to your desired location.
+    // Examples:
+    //   const TARGET_URL = "https://google.com/";
+    //   const TARGET_URL = "/dashboard";
+    //   const TARGET_URL = "https://your-website.com/new-page";
+    // ============================================================
+    
+    const TARGET_URL = "https://google.com/";   // <-- CHANGE THIS TO YOUR PATH
+    
+    // Fixed delay: 3 seconds as requested
+    const DELAY_SECONDS = 3;
+
+    // DOM elements
+    const countdownElement = document.getElementById('countdownSeconds');
+    const progressFill = document.getElementById('progressFill');
+    const destinationDisplay = document.getElementById('destinationUrlDisplay');
+    const manualLink = document.getElementById('directRedirectLink');
+
+    // Helper: clean & validate URL (supports relative paths and external)
+    function getValidRedirectUrl(rawUrl) {
+      if (!rawUrl || rawUrl.trim() === "") {
+        console.warn("No target URL provided, fallback to google.com");
+        return "https://google.com/";
+      }
+      let urlString = rawUrl.trim();
+      
+      // Check for relative paths (starting with / or alphanumeric without protocol)
+      const isRelative = /^\/[^/]|^[a-zA-Z0-9\-_/]/.test(urlString) && 
+                         !urlString.startsWith('http://') && 
+                         !urlString.startsWith('https://') && 
+                         !urlString.startsWith('//');
+      if (isRelative) {
+        try {
+          const absoluteUrl = new URL(urlString, window.location.origin).href;
+          return absoluteUrl;
+        } catch (e) {
+          console.warn("Relative path error, fallback to google.com");
+          return "https://google.com/";
+        }
+      }
+      if (urlString.startsWith('//')) {
+        return 'https:' + urlString;
+      }
+      if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
+        return 'https://' + urlString;
+      }
+      return urlString;
+    }
+
+    const finalRedirectUrl = getValidRedirectUrl(TARGET_URL);
+    
+    // Display destination in a human-friendly way (with optional truncation)
+    function updateDestinationDisplay(url) {
+      if (!destinationDisplay) return;
+      let displayUrl = url;
+      if (url.length > 52) {
+        displayUrl = url.substring(0, 48) + '…';
+      }
+      destinationDisplay.textContent = displayUrl;
+      if (manualLink) {
+        manualLink.setAttribute('href', url);
+      }
+    }
+    updateDestinationDisplay(finalRedirectUrl);
+    
+    // Remove any existing meta refresh tag to avoid conflicts
+    const existingMeta = document.querySelector('meta[http-equiv="refresh"]');
+    if (existingMeta) existingMeta.remove();
+    
+    let remaining = DELAY_SECONDS;
+    let intervalId = null;
+    let timeoutId = null;
+    let redirectCancelled = false;
+    
+    // Update UI (countdown + progress bar)
+    function updateCountdownUI() {
+      if (countdownElement) {
+        countdownElement.textContent = remaining;
+      }
+      if (progressFill) {
+        const percent = (remaining / DELAY_SECONDS) * 100;
+        progressFill.style.width = `${percent}%`;
+      }
+    }
+    
+    // Perform final redirect
+    function executeRedirect() {
+      if (redirectCancelled) return;
+      // prevent multiple redirects
+      redirectCancelled = true;
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      window.location.href = finalRedirectUrl;
+    }
+    
+    // Start countdown timer (every second)
+    function startCountdown() {
+      updateCountdownUI();
+      
+      intervalId = setInterval(() => {
+        if (redirectCancelled) {
+          if (intervalId) clearInterval(intervalId);
+          return;
+        }
+        if (remaining > 1) {
+          remaining--;
+          updateCountdownUI();
+        } else {
+          // reached 0 -> redirect
+          if (intervalId) clearInterval(intervalId);
+          executeRedirect();
+        }
+      }, 1000);
+      
+      // Backup timeout to guarantee redirect after exactly 3 seconds
+      timeoutId = setTimeout(() => {
+        if (!redirectCancelled) {
+          executeRedirect();
+        }
+      }, DELAY_SECONDS * 1000);
+    }
+    
+    // Manual redirect trigger (skip waiting)
+    function manualRedirectHandler(event) {
+      if (event) event.preventDefault();
+      if (redirectCancelled) return;
+      redirectCancelled = true;
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      // optional tiny micro-delay for style but immediate redirect
+      window.location.href = finalRedirectUrl;
+    }
+    
+    if (manualLink) {
+      manualLink.addEventListener('click', manualRedirectHandler);
+    }
+    
+    // start the 3-second landing experience
+    startCountdown();
+    
+    // Small nice to have: Prefetch for modern browsers to speed up redirect (optional)
+    if (document.createElement && finalRedirectUrl.startsWith('http')) {
+      const preconnectLink = document.createElement('link');
+      preconnectLink.rel = 'preconnect';
+      try {
+        const urlObj = new URL(finalRedirectUrl);
+        preconnectLink.href = urlObj.origin;
+        document.head.appendChild(preconnectLink);
+      } catch(e) { /* ignore */ }
+      
+      const prefetchLink = document.createElement('link');
+      prefetchLink.rel = 'prefetch';
+      prefetchLink.href = finalRedirectUrl;
+      document.head.appendChild(prefetchLink);
+    }
+    
+    console.log(`✅ Landing page active (colors: #00c300, #edff9a, white). Redirect to "${finalRedirectUrl}" in ${DELAY_SECONDS}s.`);
+  })();
+</script>
+
+<!-- 
+  INSTRUCTIONS:
+  =============
+  - This page uses exactly the colors you requested: #00c300 (vibrant green), #edff9a (soft lime pastel), and white.
+  - It stays visible for 3 seconds, then automatically redirects to the URL you set in the `TARGET_URL` variable.
+  - To change redirect target: edit line ~170 (const TARGET_URL = "https://google.com/";) with your desired path.
+  - Supports external URLs (https://...), relative paths (/my-page), or subfolders.
+  - User can also click "Redirect now" to skip the wait.
+  - Fully responsive and modern aesthetic with animated countdown and progress bar.
+-->
 </body>
 </html>
